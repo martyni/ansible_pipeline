@@ -1,0 +1,10 @@
+---
+- name: create docker group
+  group: name=docker state=present
+  become: true
+- name: vagrant user docker
+  user: name=vagrant groups=docker
+  become: true
+- name: docker running
+  service: name=docker state=running enabled=yes
+  become: true

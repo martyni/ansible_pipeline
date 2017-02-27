@@ -1,0 +1,6 @@
+docker-py
+docker-compose
+flask
+ipython
+virtualenv
+virtualenvwrapper

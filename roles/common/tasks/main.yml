@@ -1,0 +1,14 @@
+---
+- name: install packages
+  package: name={{item}} state=latest
+  with_items:
+     - docker
+     - vim
+     - git
+     - libselinux-python
+     - bind-utils
+     - "@development-tools"
+  become: true
+- name: python packages
+  pip: requirements=/vagrant/requirements.txt
+  become: true
