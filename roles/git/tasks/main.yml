@@ -14,5 +14,5 @@
   lineinfile: dest=/home/vagrant/.gitconfig state=present create=yes line={{item}}
   with_items:
      - "[user]"
-     - "        email = martynjamespratt@gmail.com"
-     - "        name = martyni"
+     - "        email = {{email}}"
+     - "        name = {{username}}"

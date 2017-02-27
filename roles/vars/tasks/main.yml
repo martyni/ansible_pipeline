@@ -1,0 +1,5 @@
+---
+- name: set global variables
+  set_fact:
+    email: martynjamespratt@gmail.com
+    username: martyni

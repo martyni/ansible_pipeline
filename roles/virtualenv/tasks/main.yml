@@ -2,6 +2,6 @@
 - name: vagrant user profile
   lineinfile: dest=/home/vagrant/.bashrc state=present line={{item}}
   with_items:
-     - "export WORKON_HOME=/repos/.virtualenvs"
+     - "export WORKON_HOME=~/share/.virtualenvs"
      - "export MSYS_HOME=/c/msys/1.0"
      - "source /usr/bin/virtualenvwrapper.sh"

@@ -2,6 +2,9 @@
 - hosts: all
   roles:
     - common
+    - vars
     - git 
     - docker
     - virtualenv
+  vars:
+    include: vars.yml

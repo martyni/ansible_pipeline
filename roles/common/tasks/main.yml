@@ -7,8 +7,12 @@
      - git
      - libselinux-python
      - bind-utils
+     - cowsay
      - "@development-tools"
   become: true
 - name: python packages
   pip: requirements=/vagrant/requirements.txt
   become: true
+  
+- name: get variables
+  debug: var=hostvars[inventory_hostname]

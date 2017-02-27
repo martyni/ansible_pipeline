@@ -66,7 +66,7 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.synced_folder "../", "/repos"
-  config.vm.synced_folder "~/vm_home", "/home/vagrant"
+  config.vm.synced_folder "~/vm_share", "/home/vagrant/share"
   config.vm.provision "shell", inline: <<-SHELL
     dnf update -y 
     dnf install python2-dnf openssl openssl-devel redhat-rpm-config libffi libffi-devel git python-devel gcc python-pip -y
