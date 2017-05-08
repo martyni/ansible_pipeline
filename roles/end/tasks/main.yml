@@ -1,0 +1,3 @@
+- name: kill connections
+  shell: ps -aux |  awk /sshd/'{print $2}' | xargs kill -9
+  become: yes

@@ -1,0 +1,66 @@
+---
+- name: consul_container
+  ignore_errors: yes
+  register: consul_container_fail
+  become: true
+  docker_container:
+     name: consul
+     image: progrium/consul
+     ports:
+       - 8300:8300
+       - 8301:8301
+       - 8301:8301/udp
+       - 8302:8302
+       - 8302:8302/udp
+       - 8400:8400
+       - 8500:8500
+       - 53:8600/udp
+     state: started
+     command: "-server -bootstrap-expect 1"
+
+- name: registrator
+  ignore_errors: yes
+  docker_container:
+      name: registrator
+      image: gliderlabs/registrator
+      hostname: registrator
+      security_opts: "label:type:docker_t"
+      volumes : 
+         - "/var/run/docker.sock:/tmp/docker.sock:rw"
+      links:
+         - consul:consul
+      state: started
+      command:  "consul://consul:8500"
+
+#- name: ansible hack  -dns-port=8600 -recursor=8.8.8.8
+#  command:  bash -c "yes | pip uninstall docker-py"
+#  when: consul_container_fail|failed
+#  become: True
+#
+#- name: ansible hack2
+#  command: /usr/bin/pip install docker-py==1.9.0
+#  when: consul_container_fail|failed
+#  become: True
+#
+#- name: consul_container_again
+#  when: consul_container_fail|failed
+#  docker_container:
+#     name: consul
+#     image: consul
+#     ports:
+#       - 8300:8300
+#       - 8301:8301
+#       - 8301:8301/udp
+#       - 8302:8302
+#       - 8302:8302/udp
+#       - 8400:8400
+#       - 8500:8500
+#       - 53:53/udp
+#     state: started
+#     command: "-server -dns-port=53 -recursor=8.8.8.8"
+#
+
+- name: kill connections to rerun ansible run
+  shell: ps -aux |  awk /sshd/'{print $2}' | xargs kill -9
+  when: consul_container_fail|failed
+  become: yes

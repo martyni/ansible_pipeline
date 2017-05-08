@@ -1,0 +1,2 @@
+[machine]
+127.0.0.1 ansible_ssh_private_key_file=/Users/martyni/repos/martyn-dev/.vagrant/machines/default/virtualbox/private_key ansible_user=vagrant ansible_port=2222

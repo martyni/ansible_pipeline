@@ -1,6 +1,6 @@
-docker-py
 docker-compose
 flask
 ipython
 virtualenv
 virtualenvwrapper
+docker-py==1.9.0

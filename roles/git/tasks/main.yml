@@ -1,15 +1,15 @@
 ---
-- name: id files
-  copy: src=../{{item}} dest=/home/vagrant/.ssh/{{item}}
-  with_items:
-     - "id_rsa"
-     - "id_rsa.pub"
-
-- name: id file permissions
-  file: mode=0400 path=/home/vagrant/.ssh/{{item}} 
-  with_items:
-     - "id_rsa"
-     - "id_rsa.pub"
+#- name: id files
+#  copy: src=../{{item}} dest=/home/vagrant/.ssh/{{item}}
+#  with_items:
+#     - "id_rsa"
+#     - "id_rsa.pub"
+#
+#- name: id file permissions
+#  file: mode=0400 path=/home/vagrant/.ssh/{{item}} 
+#  with_items:
+#     - "id_rsa"
+#     - "id_rsa.pub"
 - name: git config
   lineinfile: dest=/home/vagrant/.gitconfig state=present create=yes line={{item}}
   with_items:

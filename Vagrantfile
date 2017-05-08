@@ -22,9 +22,13 @@ Vagrant.configure("2") do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network "forwarded_port", guest: 8080, host: 8080
-  config.vm.network "forwarded_port", guest: 8123, host: 8124
-
+  config.vm.network "forwarded_port", guest: 8080, host: 8080,auto_correct: true
+  config.vm.network "forwarded_port", guest: 8123, host: 8124,auto_correct: true
+  config.vm.network "forwarded_port", guest: 8300, host: 8300,auto_correct: true
+  config.vm.network "forwarded_port", guest: 8301, host: 8301,auto_correct: true
+  config.vm.network "forwarded_port", guest: 8302, host: 8302,auto_correct: true
+  config.vm.network "forwarded_port", guest: 8400, host: 8400,auto_correct: true
+  config.vm.network "forwarded_port", guest: 8500, host: 8500,auto_correct: true
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
@@ -44,14 +48,14 @@ Vagrant.configure("2") do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
-  #
+  config.vm.provider "virtualbox" do |vb|
+    # Display the VirtualBox GUI when booting the machine
+    #vb.gui = true
+  
+    # Customize the amount of memory on the VM:
+    vb.memory = "1024"
+  end
+  
   # View the documentation for the provider you are using for more
   # information on available options.
 
@@ -65,13 +69,14 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.synced_folder "../", "/repos"
-  config.vm.synced_folder "~/vm_share", "/home/vagrant/share"
+  config.vm.synced_folder ".", "/repos", owner: "vagrant", group: "vagrant",type: "virtualbox"
+  config.vm.synced_folder "~/vm_share", "/home/vagrant/share", owner: "vagrant", group: "vagrant", type: "virtualbox"
   config.vm.provision "shell", inline: <<-SHELL
-    dnf update -y 
-    dnf install python2-dnf openssl openssl-devel redhat-rpm-config libffi libffi-devel git python-devel gcc python-pip -y
+    dnf update -y
+    dnf install python2-dnf openssl openssl-devel redhat-rpm-config libffi libffi-devel git python-devel gcc python-pip -y \
+                vim 
     pip install pip --upgrade
-    pip install ansible 
+    pip install ansible
   SHELL
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "site.yml"

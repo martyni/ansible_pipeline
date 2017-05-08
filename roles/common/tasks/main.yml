@@ -8,11 +8,20 @@
      - libselinux-python
      - bind-utils
      - cowsay
+     - npm
      - "@development-tools"
   become: true
 - name: python packages
   pip: requirements=/vagrant/requirements.txt
   become: true
+
+- name: vagrant owner
+  become: true
+  file: path={{item}} state=directory owner=vagrant group=vagrant 
+  with_items:
+     - "/repos"
+     - "/home/vagrant/share"
+    
   
 - name: get variables
   debug: var=hostvars[inventory_hostname]
