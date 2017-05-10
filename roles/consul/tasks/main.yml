@@ -2,11 +2,13 @@
 - name: consul_container
   ignore_errors: yes
   register: consul_container_fail
+  retries: 2
   become: true
   docker_container:
      name: consul
      image: progrium/consul
      restart: yes
+     restart_policy: "unless-stopped"
      ports:
        - 8300:8300
        - 8301:8301
@@ -21,10 +23,13 @@
 
 - name: registrator
   ignore_errors: yes
+  register: consul_container_fail
+  retries: 2
   docker_container:
       name: registrator
       image: gliderlabs/registrator
       restart: yes
+      restart_policy: "unless-stopped"
       security_opts: "label:type:docker_t"
       volumes : 
          - "/var/run/docker.sock:/tmp/docker.sock:rw"
@@ -54,11 +59,15 @@
 
 - name: consul-proxy
   become: true
+  register: consul_container_fail
+  retries: 2
+  ignore_errors: yes
   docker_container:
      ports:
         - 80:80
      image: jlordiales/nginx-consul
      restart: yes
+     restart_policy: "unless-stopped"
      name: consul-proxy
      volumes: 
         - "/mnt/templates:/templates:rw"
@@ -92,8 +101,15 @@
 #     state: started
 #     command: "-server -dns-port=53 -recursor=8.8.8.8"
 #
+#
+#- name: kill connections to rerun ansible run
+#  shell: ps -aux |  awk /sshd/'{print $2}' | xargs kill -9
+#  when: consul_container_fail|failed
+#  become: yes
 
-- name: kill connections to rerun ansible run
-  shell: ps -aux |  awk /sshd/'{print $2}' | xargs kill -9
-  when: consul_container_fail|failed
+- name: restart docker
   become: yes
+  when: consul_container_fail|failed
+  service: 
+     name: docker
+     state: restarted
