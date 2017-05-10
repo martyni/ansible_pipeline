@@ -6,6 +6,7 @@
   docker_container:
      name: consul
      image: progrium/consul
+     restart: yes
      ports:
        - 8300:8300
        - 8301:8301
@@ -23,6 +24,7 @@
   docker_container:
       name: registrator
       image: gliderlabs/registrator
+      restart: yes
       security_opts: "label:type:docker_t"
       volumes : 
          - "/var/run/docker.sock:/tmp/docker.sock:rw"
