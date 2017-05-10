@@ -16,21 +16,52 @@
        - 8500:8500
        - 53:8600/udp
      state: started
-     command: "-server -bootstrap-expect 1"
+     command: "-server -bootstrap-expect 1 -advertise {{ ansible_eth0.ipv4.address }} "
 
 - name: registrator
   ignore_errors: yes
   docker_container:
       name: registrator
       image: gliderlabs/registrator
-      hostname: registrator
       security_opts: "label:type:docker_t"
       volumes : 
          - "/var/run/docker.sock:/tmp/docker.sock:rw"
-      links:
-         - consul:consul
       state: started
-      command:  "consul://consul:8500"
+      network_mode: host
+      command:  "consul://localhost:8500"
+
+
+
+- name: mount_directory
+  become: true
+  file:
+     dest: "/mnt/templates/"
+     recurse: true
+     directory_mode: yes
+     group: docker
+     
+
+- name: mounts_for_containers
+  become: true
+  copy:
+     force: yes
+     src: "{{ ansible_root }}/consul/files/service.ctmpl"
+     dest: "/mnt/templates/service.ctmpl"
+     group: docker
+     mode: "777"
+
+- name: consul-proxy
+  become: true
+  docker_container:
+     ports:
+        - 80:80
+     image: jlordiales/nginx-consul
+     restart: yes
+     name: consul-proxy
+     volumes: 
+        - "/mnt/templates:/templates:rw"
+     links:
+        - consul:consul
 
 #- name: ansible hack  -dns-port=8600 -recursor=8.8.8.8
 #  command:  bash -c "yes | pip uninstall docker-py"

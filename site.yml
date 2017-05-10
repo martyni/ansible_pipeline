@@ -7,5 +7,5 @@
     - docker
     - virtualenv
     - consul
-  vars:
-    include: vars.yml
+#  vars:
+#    include: vars.yml

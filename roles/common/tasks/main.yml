@@ -9,6 +9,7 @@
      - bind-utils
      - cowsay
      - npm
+     - tree
      - "@development-tools"
   become: true
 - name: python packages

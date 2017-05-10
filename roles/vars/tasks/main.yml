@@ -3,3 +3,4 @@
   set_fact:
     email: martynjamespratt@gmail.com
     username: martyni
+    ansible_root: /repos/roles
