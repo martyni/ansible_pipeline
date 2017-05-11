@@ -1,0 +1,46 @@
+---
+- name: jenkins_group
+  become: true
+  group:
+     name: jenkins
+     gid: 1000
+
+- name: jenkins_user
+  become: true
+  user:
+     name: jenkins
+     uid: 1000
+     group: jenkins
+
+- name: jenkins_data_dir
+  become: true
+  file:
+     dest: "/mnt/jenkins"
+     recurse: true
+     directory_mode: yes
+     owner: jenkins
+     group: jenkins
+
+- name: jenkins_container
+  ignore_errors: yes
+  register: jenkins_container_fail
+  retries: 2
+  docker_container:
+     name: jenkins
+     image: jenkins
+     restart: yes
+     restart_policy: "unless-stopped"
+     ports:
+        - 8080
+        - 50000        
+     volumes: 
+        "/mnt/jenkins:/var/jenkins_home:rw"
+     state: started
+
+
+- name: restart docker
+  become: yes
+  when: jenkins_container_fail|failed
+  service: 
+     name: docker
+     state: restarted

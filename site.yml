@@ -1,10 +1,11 @@
 ---
 - hosts: all 
   roles:
-#    - common
-#    - vars
-#    - git 
-#    - docker
-#    - virtualenv
-#    - consul
+    - common
+    - vars
+    - git 
+    - docker
+    - virtualenv
+    - consul
     - mongo
+     - jenkins
