@@ -1,0 +1,42 @@
+---
+- name: mongo_data_dir
+  become: true
+  file:
+     dest: "/mnt/mongo"
+     recurse: true
+     directory_mode: yes
+     group: docker
+
+- name: mongo_container
+  ignore_errors: yes
+  register: mongo_container_fail
+  retries: 2
+  docker_container:
+     name: mongo
+     image: mongo
+     restart: yes
+     restart_policy: "unless-stopped"
+     volumes: 
+        "/mnt/mongo:/data"
+     state: started
+
+- name: mongo_express_container
+  ignore_errors: yes
+  register: mongo_container_fail
+  retries: 2
+  docker_container:
+      name: mongo_express
+      image: mongo-express
+      restart: yes
+      restart_policy: "unless-stopped"
+      ports:
+         - 8081
+      links:
+         - mongo:mongo
+
+- name: restart docker
+  become: yes
+  when: mongo_container_fail|failed
+  service: 
+     name: docker
+     state: restarted
