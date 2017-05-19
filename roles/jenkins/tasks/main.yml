@@ -41,7 +41,8 @@
         - 8080
         - 50000        
      volumes: 
-        "/mnt/jenkins:/var/jenkins_home:rw"
+        - "/mnt/jenkins:/var/jenkins_home:rw"
+
      state: started
 
 
