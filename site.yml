@@ -8,4 +8,4 @@
     - virtualenv
     - consul
     - mongo
-     - jenkins
+    - jenkins

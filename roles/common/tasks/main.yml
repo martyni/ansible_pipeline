@@ -10,12 +10,30 @@
      - cowsay
      - npm
      - tree
+     - binutils 
+     - gcc 
+     - make 
+     - patch
+     - libgomp 
+     - glibc-headers
+     - glibc-devel
+     - kernel-headers
+     - kernel-PAE-devel
+     - dkms
      - "@development-tools"
   become: true
+
 - name: python packages
   pip: requirements=/vagrant/requirements.txt
   become: true
 
+- name: Add virtualbox repo
+  become: true
+  yum_repository:
+     name: virtualbox
+     baseurl: http://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo
+     description: virtualbox
+ 
 - name: vagrant owner
   become: true
   file: path={{item}} state=directory owner=vagrant group=vagrant 

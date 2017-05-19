@@ -21,13 +21,20 @@
      owner: jenkins
      group: jenkins
 
-- name: jenkins_container
+- name: "{{username}}_jenkins_container_built"
+  ignore_errors: no
+  docker_image:
+      name: "{{username}}/jenkins:latest"
+      push: yes
+      path: "{{ ansible_root }}/jenkins/files/"
+
+- name: "{{username}}_jenkins_container"
   ignore_errors: yes
   register: jenkins_container_fail
   retries: 2
   docker_container:
      name: jenkins
-     image: jenkins
+     image: "{{username}}/jenkins"
      restart: yes
      restart_policy: "unless-stopped"
      ports:
